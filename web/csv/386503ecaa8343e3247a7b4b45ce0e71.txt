@@ -1,0 +1,4 @@
+id,name,contact,mail,dob
+4,student1,8888888,d@gmail.com,1991-06-25
+5,student2,8888888,d@gmail.com,1991-06-25
+6,student3,8888888,d@gmail.com,1991-06-25

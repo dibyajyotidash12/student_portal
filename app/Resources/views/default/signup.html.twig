@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="agile-signup">
+
+        <div class="content2">
+            <div class="grids-heading gallery-heading signup-heading">
+                <h2>Sign Up</h2>
+            </div>
+            <form action="{{ path("app_default_signup") }}" method="post">
+                <input type="text" name="userId" placeholder="Student ID">
+                <input type="text" name="studentName" placeholder="Name">
+                <input type="text" name="studentContact" placeholder="Contact Number">
+                <input type="password" name="pass" placeholder="Password">
+
+                <input type="submit" class="register" value="Sign Up">
+            </form>
+            <div class="signin-text">
+
+                <div class="text-right">
+                    <p><a href="{{ path("homepage") }}"> Login Here</a></p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- footer -->
+        <div class="copyright">
+            <p>© 2016 Colored . All Rights Reserved .</p>
+        </div>
+        <!-- //footer -->
+
+    </div>
+    <script src="js/proton.js"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- bootstrap-css -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+    <!-- //bootstrap-css -->
+    <!-- Custom CSS -->
+    <link href="{{ asset('css/style.css') }}" rel='stylesheet' type='text/css' />
+    <!-- font CSS -->
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <!-- font-awesome icons -->
+    <link rel="stylesheet" href="{{ asset('css/font.css') }}" type="text/css"/>
+    <link href="{{ asset('css/font-awesome.css') }}" rel="stylesheet">
+{% endblock %}
