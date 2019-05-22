@@ -7,11 +7,33 @@
             <div class="grids-heading gallery-heading signup-heading">
                 <h2>Sign Up</h2>
             </div>
+            {% if message is defined and message==1 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #0e8f9f;">Registration Done</div>
+            {% endif %}
+            {% if message is defined and message==2 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Data Already Exist</div>
+            {% endif %}
+            {% if message is defined and message==3 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Invalid Credential</div>
+            {% endif %}
+            {% if message is defined and message==4 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Invalid Student ID</div>
+            {% endif %}
+            {% if message is defined and message==5 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Provide Student ID & Password</div>
+            {% endif %}
+            {% if message is defined and message==6 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Password and Confirm Password must be Same</div>
+            {% endif %}
+            {% if message is defined and message==7 %}
+                <div style="margin:5px;padding: 10px;color:#fff;background: #ac2925;">Password Must be 8 Charecters long atleast</div>
+            {% endif %}
             <form action="{{ path("app_default_signup") }}" method="post">
                 <input type="text" name="userId" placeholder="Student ID">
                 <input type="text" name="studentName" placeholder="Name">
                 <input type="text" name="studentContact" placeholder="Contact Number">
                 <input type="password" name="pass" placeholder="Password">
+                <input type="password" name="cpass" placeholder="Confirm Password">
 
                 <input type="submit" class="register" value="Sign Up">
             </form>

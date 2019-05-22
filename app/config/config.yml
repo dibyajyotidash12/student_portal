@@ -10,6 +10,7 @@ parameters:
     file_directory: '%kernel.root_dir%/../web/postimage'
     file_directory_csv: '%kernel.root_dir%/../web/csv'
 
+
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
@@ -80,5 +81,9 @@ doctrine_mongodb:
     document_managers:
         default:
             auto_mapping: true
-
+lexik_jwt_authentication:
+    private_key_path: %kernel.root_dir%/../var/jwt/private.pem
+    public_key_path:  %kernel.root_dir%/../var/jwt/public.pem
+    pass_phrase:      %jwt_key_pass_phrase%
+    token_ttl:        3600
 

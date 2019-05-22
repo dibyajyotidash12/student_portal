@@ -32,23 +32,31 @@ class DefaultController extends Controller
             $request-> get('studentContact') &&
             ("" != $request-> get('studentContact')) &&
             $request-> get('pass') &&
-            ("" != $request-> get('pass'))){
+            ("" != $request-> get('pass')) &&
+            $request-> get('cpass') &&
+            ("" != $request-> get('cpass'))){
 
-            $student_info = array(  'userId' => $request-> get('userId'),
-                                    'studentName' => $request-> get('studentName'),
-                                    'studentContact' => $request-> get('studentContact'),
-                                    'pass' => $request-> get('pass'));
-            $reg_student = $this->get('registration');
-            if($reg_student->studentRegister($student_info)){
-                $saveStatus = 1;
+            if($request-> get('pass')!=$request-> get('cpass')){
+                return $this->render('default/signup.html.twig', array( 'message' => '6' ));
+            }
+            elseif (strlen($request-> get('pass')) < 8){
+                return $this->render('default/signup.html.twig', array( 'message' => '7' ));
             }
             else{
-                $saveStatus = 2;
+                $student_info = array(  'userId' => $request-> get('userId'),
+                    'studentName' => $request-> get('studentName'),
+                    'studentContact' => $request-> get('studentContact'),
+                    'pass' => $request-> get('pass'));
+                $reg_student = $this->get('registration');
+                if($reg_student->studentRegister($student_info)){
+                    $saveStatus = 1;
+                    return $this->render('default/index.html.twig', array( 'message' => $saveStatus ));
+                }
+                else{
+                    $saveStatus = 2;
+                    return $this->render('default/signup.html.twig', array( 'message' => $saveStatus ));
+                }
             }
-
-
-            return $this->render('default/index.html.twig', array( 'message' => $saveStatus ));
-
         }
         else{
             return $this->render('default/signup.html.twig');
@@ -71,7 +79,7 @@ class DefaultController extends Controller
             $reg_student = $this->get('registration');
             $loginResponse = $reg_student->studentLogin($student_info);
             if($loginResponse){
-               if($loginResponse == $request-> get('pass')){
+               if($loginResponse == md5($request-> get('pass'))){
 
                    $session->set('current_user', $student_info["userId"]);
                    $newPost = $this->get('newPost');
@@ -93,6 +101,18 @@ class DefaultController extends Controller
         else{
             return $this->render('default/index.html.twig', array( 'message' => 5 ));
         }
+
+    }
+    /**
+     * @Route("/portal/logout", name="app_default_logout")
+     */
+    public function logoutAction(Request $request)
+    {
+        $session = $request->getSession();
+        $session->clear();
+        return $this->render('default/index.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
 
     }
     /**
@@ -179,8 +199,7 @@ class DefaultController extends Controller
             ("" != $request->get('friend_request_accept'))){
             if($friendList-> friendRequestAccept($request,$request->get('friend_request_accept'))){
 
-                $friendList-> friendRequest($request);
-                $allUserList = $friendList-> userlist($request);
+
                 $allRequestList = $friendList-> friendRequestlist($request);
                 return $this-> render('default/friendrequest.html.twig',array('allRequestList' => $allRequestList, 'notification' => '1'));
 
@@ -287,4 +306,40 @@ class DefaultController extends Controller
 
             return $this-> render('default/displayData.html.twig', array('userObject' => $userObject));
     }
+    /**
+     * @Route("/test", name="app_default_test")
+     */
+    public function testAction(Request $request)
+    {
+        $token = $this->get('lexik_jwt_authentication.encoder')
+            ->encode([
+                'username' => "dibyadash",
+                'exp' => time() + 3600 // 1 hour expiration
+            ]);
+        var_dump($token);
+        $data = $this->get('lexik_jwt_authentication.encoder')->decode($token);
+        var_dump($data);
+        die();
+        return $this->render('default/index.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
+    }
+    /**
+     * @Route("/test1", name="app_default_test1")
+     */
+    public function test1Action(Request $request)
+    {
+        $http = new Client('http://coop.apps.knpuniversity.com', array(
+            'request.options' => array(
+                'exceptions' => false,
+            )
+        ));
+        $request = $http->post('/api/2/eggs-collect');
+        $response = $request->send();
+        echo $response->getBody();
+
+        echo "\n\n";
+        die();
+    }
+
 }

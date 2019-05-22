@@ -7,6 +7,7 @@ namespace AppBundle\Service;
 use AppBundle\Document\student;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class register
 {
@@ -17,15 +18,37 @@ class register
     }
 
     public function studentRegister($student_info){
-        $student = new student();
-        $student-> setStudentId($student_info["userId"]);
-        $student-> setStudentName($student_info['studentName']);
-        $student-> setStudentContact($student_info['studentContact']);
-        $student-> setPassword($student_info['pass']);
-        $dm = $this-> container-> get('doctrine_mongodb')->getManager();
-        $dm->persist($student);
-        $dm->flush();
-        return true;
+
+
+        $qb = $this-> container-> get('doctrine_mongodb')
+            ->getRepository('AppBundle:student')
+            ->createQueryBuilder();
+
+        $qb ->addOr(
+                $qb->expr()
+                    ->field('studentId')->equals($student_info['userId'])
+            )
+            ->addOr(
+                $qb->expr()
+                    ->field('studentName')->equals($student_info['studentName'])
+            );
+
+        $userData =$qb->getQuery()->getSingleResult();
+
+        if(!$userData){
+            $student = new student();
+            $student-> setStudentId($student_info["userId"]);
+            $student-> setStudentName($student_info['studentName']);
+            $student-> setStudentContact($student_info['studentContact']);
+
+            $student-> setPassword(md5($student_info['pass']));
+
+            $dm = $this-> container-> get('doctrine_mongodb')->getManager();
+            $dm->persist($student);
+            $dm->flush();
+            return true;
+        }
+        return false;
     }
     public function studentLogin($student_info){
 

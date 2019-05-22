@@ -146,6 +146,15 @@ class friend
                 $dm->persist($friendListEntry);
                 $dm->flush();
 
+                $friendListEntry = new friendList();
+                $friendListEntry->setStudentId($requestrObject->getStudentId());
+                $friendListEntry->setFriendId($requestrObject->getFriendReuqetTo());
+                $friendListEntry->setStudentObject($requestrObject->getRequestedFriendObject());
+                $friendListEntry->setFriendObject($requestrObject->getStudentObject());
+                $dm = $this-> container-> get('doctrine_mongodb')->getManager();
+                $dm->persist($friendListEntry);
+                $dm->flush();
+
                 return true;
 
             }
@@ -167,6 +176,9 @@ class friend
                 ->field('friendObject')->references($userrObject)
                 ->getQuery()
                 ->execute();
+            //$requestrObject->addOr($requestrObject->expr()->field('studentObject')->references($userrObject));
+            //$requestrObject->getQuery()->execute();
+
             if($requestrObject){
                 return $requestrObject;
             }
